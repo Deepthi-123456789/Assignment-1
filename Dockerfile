@@ -1,29 +1,29 @@
-# Use the official Node.js image as a base
+# Use the official Node.js 18 image as the base image
 FROM node:18
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json for dependency installation
+# Copy only the package.json and package-lock.json (or yarn.lock) for caching dependencies
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application files, including api.js and axios.js
+# Copy the rest of the application files to the working directory
 COPY . .
 
-# Create the .env.local file with environment variables
-RUN echo "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000" >> .env.local
+# Ensure the frontend directory exists and create the .env.local file
+RUN mkdir -p frontend && echo "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000" > Assignment-1/.env.local
 
-# Build the React application for production
+# Debug: List contents to verify files were copied correctly
+RUN ls -R /app
+
+# Build the Next.js application
 RUN npm run build
 
-# Install serve to serve the built app
-RUN npm install -g serve
-
-# Expose the port the app will run on
+# Expose the port that the application will run on
 EXPOSE 3000
 
-# Command to start the application
-CMD ["serve", "-s", "build"]
+# Start the Next.js application
+CMD ["npm", "run", "dev"]
