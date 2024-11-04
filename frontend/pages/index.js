@@ -1,4 +1,1 @@
-// frontend/pages/index.js
-export default function Home() {
-    return <h1>Welcome to Next.js!</h1>;
-}
+export const backendApiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
