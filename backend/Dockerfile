@@ -4,18 +4,19 @@ FROM python:3.10
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE=your_app.settings  # Set your settings module here
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the requirements.txt first to leverage Docker cache
-COPY requirements.txt ./
+COPY backend/requirements.txt ./
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files
-COPY . .
+# Copy the entire backend application files to the working directory
+COPY backend/ .
 
 # Create a .env file and set environment variables
 RUN echo "FRONTEND_URL=http://127.0.0.1:3000" >> .env
@@ -32,7 +33,7 @@ RUN echo "OPENAI_API_KEY=your_azure_api_key" >> .env
 # Run database migrations and create a superuser
 RUN python manage.py makemigrations
 RUN python manage.py migrate
-RUN python manage.py create_superuser --noinput --username admin --email admin@admin.com
+RUN python manage.py createsuperuser --noinput --username admin --email admin@admin.com
 RUN echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_user('assistant', '', 'assistant')" | python manage.py shell
 RUN python manage.py collectstatic --noinput
 
