@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Ensure the frontend directory exists and create the .env.local file
-RUN mkdir -p frontend && echo "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000" > Assignment-1/.env.local
+RUN mkdir -p frontend && echo "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000" > frontend/.env.local
 
 # Debug: List contents to verify files were copied correctly
 RUN ls -R /app
